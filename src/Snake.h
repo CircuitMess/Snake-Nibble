@@ -57,6 +57,9 @@ private:
     uint8_t tileSize = 4;
     bool snakeColor;
     bool eaten;
+    uint16_t hScore;
+    uint8_t foodSize = 4;
+    
 
 
 
@@ -68,6 +71,11 @@ private:
     void drawSnake();
     void snakeMenu();
     void drawHead();
+    void control();
+    void setButtonCallbacksGame();
+    void newGame();
+    void crash();
+    void foodCheck();
 };
 
 #endif

@@ -164,30 +164,30 @@ void Snake::drawHead(){
   if(dirX == 1*speed)  {
   baseSprite->drawRect(snakeX[0]+3, snakeY[0]+1, 2, 3,TFT_RED);
     baseSprite->drawPixel(snakeX[0], snakeY[0]+1, EYE_COLOR);
-  baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+1,  EYE_COLOR);
-    baseSprite->drawPixel(snakeX[0], snakeY[0]+3,  EYE_COLOR);
-  baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+3,  EYE_COLOR);
+  baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+1,  TFT_BLACK);
+    baseSprite->drawPixel(snakeX[0], snakeY[0]+3,  TFT_BLACK);
+  baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+3,  TFT_BLACK);
   }
-  else if(dirX == -1*speed)  {
+  else if(instance->dirX == -1*speed)  {
     baseSprite->fillRect(snakeX[0], snakeY[0]+1, 2, 3,TFT_RED);
-    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+1,  EYE_COLOR);
-    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+3,  EYE_COLOR);
-    baseSprite->drawPixel(snakeX[0]+4, snakeY[0]+1,  EYE_COLOR);
-    baseSprite->drawPixel(snakeX[0]+4, snakeY[0]+3,  EYE_COLOR);
+    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+1,  TFT_BLACK);
+    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+3,  TFT_BLACK);
+    baseSprite->drawPixel(snakeX[0]+4, snakeY[0]+1,  TFT_BLACK);
+    baseSprite->drawPixel(snakeX[0]+4, snakeY[0]+3,  TFT_BLACK);
   }
-  else if(dirY == 1*speed) {
+  else if(instance->dirY == 1*speed) {
      baseSprite->fillRect(snakeX[0]+1, snakeY[0]+3, 3, 2,TFT_RED);
-     baseSprite->drawPixel(snakeX[0]+1, snakeY[0],  EYE_COLOR);
-     baseSprite->drawPixel(snakeX[0]+3, snakeY[0],  EYE_COLOR);
-     baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+1,  EYE_COLOR);
-     baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+1,  EYE_COLOR);
+     baseSprite->drawPixel(snakeX[0]+1, snakeY[0],  TFT_BLACK);
+     baseSprite->drawPixel(snakeX[0]+3, snakeY[0],  TFT_BLACK);
+     baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+1,TFT_BLACK);
+     baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+1,TFT_BLACK);
   }
-  else if(dirY == -1*speed) {
+  else if(instance->dirY == -1*speed) {
     baseSprite->fillRect(snakeX[0]+1, snakeY[0], 3, 2,TFT_RED);
-    baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+3,  EYE_COLOR);
-    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+3,  EYE_COLOR);
-    baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+4,  EYE_COLOR);
-    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+4,  EYE_COLOR);
+    baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+3,  TFT_BLACK);
+    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+3,  TFT_BLACK);
+    baseSprite->drawPixel(snakeX[0]+1, snakeY[0]+4,  TFT_BLACK);
+    baseSprite->drawPixel(snakeX[0]+3, snakeY[0]+4,  TFT_BLACK);
   }
 }
 void Snake::update(uint){
@@ -208,9 +208,30 @@ void Snake::update(uint){
 		titleScreen();
         //drawSnake();
 	}
-    if (gamestatus == "newgame") {}//newgame(); }
-    if (gamestatus == "gameover") {}
-    if (gamestatus == "paused") {}
+    if (gamestatus == "newgame") {
+        
+        if(screenChange){
+            newGame();
+        }
+        baseSprite->clear(TFT_BLACK);
+            baseSprite->clear(TFT_BLACK);
+    if(borderFlag) baseSprite->drawRect(0,0,160,128,TFT_WHITE);
+    baseSprite->setCursor(6, 110, 2);
+    baseSprite->setTextSize(1);
+    baseSprite->setTextColor(TFT_LIGHTGREY);
+    baseSprite->print("SCORE:");
+    baseSprite->print(hScore);
+        control();
+        crash();
+        if(eaten) baseSprite->fillRect(foodX, foodY, foodSize, foodSize, TFT_BLACK);
+        drawSnake();
+        if(eaten) drawFood();
+        baseSprite->fillRect(foodX, foodY, foodSize, foodSize,TFT_YELLOW);
+        foodCheck();
+        control();
+        if (gamestatus == "gameover") {}
+        if (gamestatus == "paused") {}
+    }
     	if(gamestatus == "eraseData")
 	{
 		if(screenChange){
@@ -230,6 +251,15 @@ void Snake::update(uint){
 		}
 	}
     draw();
+}
+void Snake::control(){
+  for(int i = snakeLength; i  > 0; i--)
+  {
+    snakeX[i] = snakeX[i-1];
+    snakeY[i] = snakeY[i-1];
+  }
+  snakeX[0] += instance->dirX;
+  snakeY[0] += instance->dirY;
 }
 
 void Snake::clearButtonCallbacks()
@@ -269,6 +299,18 @@ void Snake::snakeMenu(){
 }
 */
 
+void Snake::newGame(){
+    setButtonCallbacksGame();
+    snakeX[0] = 78;
+    snakeY[0] = 63;
+    dirX = 1*speed;
+    dirY = 0;
+    snakeLength = 12/speed;
+    hScore = 0;
+
+
+}
+
 void Snake::drawFood(){
     while(!foodCoolFlag){
     foodX = random(3, 122);
@@ -303,3 +345,51 @@ for (int i = (snakeLength) - 1; i >= 0; i--){
     drawHead();
 }
 
+void Snake::setButtonCallbacksGame(){
+        clearButtonCallbacks();
+        buttons->setBtnPressCallback(BTN_UP, [](){
+            if(instance->dirY == 0){
+                instance->dirX = 0;
+                instance->dirY = -1;
+            }
+        });
+        buttons->setBtnPressCallback(BTN_DOWN, [](){
+            if(instance->dirY == 0){
+                instance->dirX = 0;
+                instance->dirY = 1;
+            }
+        });
+        buttons->setBtnPressCallback(BTN_RIGHT, [](){
+            if(instance->dirX == 0){
+                instance->dirX = 1;
+                instance->dirY = 0;
+            }
+        });
+        buttons->setBtnPressCallback(BTN_LEFT, [](){
+            if(instance->dirX == 0){
+                instance->dirX = -1;
+                instance->dirY = 0;
+            }
+        });
+    	buttons->setBtnPressCallback(BTN_B, [](){
+		Serial.println("paused");
+		instance->gamestatus = "paused";
+	});
+}
+void Snake::foodCheck(){}
+
+void Snake::crash(){
+    if(borderFlag) {
+      if ((snakeX[0] <= 0 || snakeY[0] <= 0 || snakeX[0] >= 155 || snakeY[0] >= 124)); //endScreen();
+    }
+    else {
+      for(int i = 0; i < snakeLength; i++){
+        if(snakeX[i] <= 0 && snakeX[i] > -5) snakeX[i] = 126;
+        else if (snakeX[i] < -5);//snakeX[i] = 127;
+        else snakeX[i] = snakeX[i]%127;
+        if (snakeY[i] <= 0 && snakeY[i] > -5 ) snakeY[i] = 126;
+        else if (snakeY[i] < -5);//snakeY[i] = 127;
+        else snakeY[i] = snakeY[i]%127;
+    }
+  }
+}
