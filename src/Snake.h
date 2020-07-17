@@ -40,7 +40,7 @@ private:
     String prevGamestatus = gamestatus;
     bool savePresent = 0;
     Display *display;
-    bool speed = 1;
+    bool speedB = 1;
     uint8_t menuSignal;
     bool borderFlag = 1;
     int8_t dirX;
@@ -54,14 +54,14 @@ private:
     bool foodCoolFlag;
     uint16_t snakeLength;
     bool snakeMenuInt;
-    uint8_t tileSize = 4;
+    uint8_t tileSize = 5;
     bool snakeColor;
     bool eaten;
     uint16_t hScore;
     uint8_t foodSize = 4;
-    
-
-
+    uint8_t speed = 1;
+    bool skip;
+    uint8_t snakeColorVal;
 
     //void clearButtonCallbacks();
     void titleSetup();
@@ -73,9 +73,15 @@ private:
     void drawHead();
     void control();
     void setButtonCallbacksGame();
-    void newGame();
+    void newGameSetup();
     void crash();
     void foodCheck();
+    void dead();
+    void oldgame();
+    void paused();
+    void pausedSetup();
+    void oldGame();
+    void snakeMenuControl();
 };
 
 #endif
