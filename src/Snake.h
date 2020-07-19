@@ -62,6 +62,7 @@ private:
     uint8_t speed = 1;
     bool skip;
     uint8_t snakeColorVal;
+    bool bigger;
 
     //void clearButtonCallbacks();
     void titleSetup();

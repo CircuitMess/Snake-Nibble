@@ -250,8 +250,8 @@ void Snake::update(uint)
             titleSetup();
         }
         titleScreen();
-        snakeMenuControl();
         control();
+        snakeMenuControl();
         drawSnake();
     }
     if (gamestatus == "newgame")
@@ -313,10 +313,27 @@ void Snake::update(uint)
 }
 void Snake::control()
 {
-    for (int i = snakeLength; i > 0; i--)
+    if (bigger)
     {
-        snakeX[i] = snakeX[i - 1];
-        snakeY[i] = snakeY[i - 1];
+        for (int i = snakeLength - 6; i > 0; i--)
+        {
+            snakeX[i] = snakeX[i - 1];
+            snakeY[i] = snakeY[i - 1];
+        }
+        for (int i = snakeLength; i > snakeLength - 6; i--)
+        {
+            snakeX[i] = snakeX[snakeLength - 7];
+            snakeY[i] = snakeY[snakeLength - 7];
+        }
+        bigger = false;
+    }
+    else
+    {
+        for (int i = snakeLength; i > 0; i--)
+        {
+            snakeX[i] = snakeX[i - 1];
+            snakeY[i] = snakeY[i - 1];
+        }
     }
     snakeX[0] += instance->dirX;
     snakeY[0] += instance->dirY;
@@ -337,15 +354,15 @@ void Snake::snakeMenu()
 {
     if (snakeMenuInt == 0)
     {
-        snakeX[0] = 20;
-        snakeY[0] = 1;
+        snakeX[0] = 0;
+        snakeY[0] = 0;
         snakeMenuInt = 1;
     }
     snakeLength = 30;
 }
 void Snake::snakeMenuControl()
 {
-    if (snakeX[0] < 121 && snakeY[0] <= 2)
+    if (snakeX[0] < 121 && snakeY[0] <= 1)
     {
         dirX = 1;
         dirY = 0;
@@ -360,7 +377,7 @@ void Snake::snakeMenuControl()
         dirX = -1;
         dirY = 0;
     }
-    else if (snakeX[0] <= 2 && snakeY[0] > 3)
+    else if (snakeX[0] <= 1 && snakeY[0] > 3)
     {
         dirX = 0;
         dirY = -1;
@@ -497,6 +514,7 @@ void Snake::foodCheck()
         snakeLength += 6;
         hScore += (1 * speed);
         tone(BUZZ_PIN, 200, 100);
+        bigger = true;
     }
 }
 
