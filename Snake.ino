@@ -13,7 +13,7 @@
 Display display(128, 128, BL_PIN, 0);
 I2cExpander i2c;
 InputI2C buttons(&i2c);
-Snake game(display);
+Snake::Snake game(display);
 
 void setup()
 {

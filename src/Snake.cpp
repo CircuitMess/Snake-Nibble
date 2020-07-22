@@ -1,8 +1,7 @@
 #include "Snake.h"
-//#include "sprites.hpp"
-#include "icon.h"
-Snake::Snake *Snake::instance = nullptr;
-GameInfo Game::info = {"Snake", "Classic snake game", icon};
+#include "snake_icon.h"
+Snake::Snake *Snake::Snake::instance = nullptr;
+GameInfo Game::info = {"Snake", "Classic snake game", snake_icon};
 Snake::Snake::Snake(Display &display) : Game(display), baseSprite(display.getBaseSprite()),
                                         buttons(Input::getInstance()), display(&display)
 {
