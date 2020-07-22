@@ -1,10 +1,10 @@
 #include "Snake.h"
 //#include "sprites.hpp"
 #include "icon.h"
-Snake *Snake::instance = nullptr;
+Snake::Snake *Snake::instance = nullptr;
 GameInfo Game::info = {"Snake", "Classic snake game", icon};
-Snake::Snake(Display &display) : Game(display), baseSprite(display.getBaseSprite()),
-                                 buttons(Input::getInstance()), display(&display)
+Snake::Snake::Snake(Display &display) : Game(display), baseSprite(display.getBaseSprite()),
+                                        buttons(Input::getInstance()), display(&display)
 {
     Serial.println("construcctor");
     delay(5);
@@ -22,7 +22,7 @@ Snake::Snake(Display &display) : Game(display), baseSprite(display.getBaseSprite
     }
     strncat(highscoresPath, ".sav", 30);
 }
-void Snake::start()
+void Snake::Snake::start()
 {
     //randomSeed(millis() * micros());
     //baseSprite->clear(TFT_BLUE);
@@ -48,15 +48,14 @@ void Snake::start()
     draw();
     UpdateManager::addListener(this);
 }
-void Snake::stop()
+void Snake::Snake::stop()
 {
     //clearButtonCallbacks();
     jb.clear();
     delete[] highscoresPath;
     UpdateManager::removeListener(this);
 }
-
-void Snake::draw()
+void Snake::Snake::draw()
 {
     if (gamestatus == "title")
     {
@@ -77,8 +76,7 @@ void Snake::draw()
     }
     display->commit();
 }
-
-void Snake::titleScreen()
+void Snake::Snake::titleScreen()
 {
     baseSprite->clear(TFT_BLACK);
     baseSprite->setTextColor(TFT_GREEN);
@@ -119,7 +117,7 @@ void Snake::titleScreen()
     else
         speed = 2;*/
 }
-void Snake::titleSetup()
+void Snake::Snake::titleSetup()
 {
     menuSignal = 0;
     clearButtonCallbacks();
@@ -196,8 +194,7 @@ void Snake::titleSetup()
         tone(BUZZ_PIN, 200, 100);
     });
 }
-
-void Snake::drawHead()
+void Snake::Snake::drawHead()
 {
     if (dirX == 1)
     {
@@ -232,7 +229,7 @@ void Snake::drawHead()
         baseSprite->drawPixel(snakeX[0] + 3, snakeY[0] + 4, TFT_BLACK);
     }
 }
-void Snake::update(uint)
+void Snake::Snake::update(uint)
 {
     if (gamestatus != prevGamestatus)
     {
@@ -311,7 +308,7 @@ void Snake::update(uint)
     }
     draw();
 }
-void Snake::control()
+void Snake::Snake::control()
 {
     if (bigger)
     {
@@ -338,8 +335,7 @@ void Snake::control()
     snakeX[0] += instance->dirX;
     snakeY[0] += instance->dirY;
 }
-
-void Snake::clearButtonCallbacks()
+void Snake::Snake::clearButtonCallbacks()
 {
     for (uint8_t i = 0; i < 7; i++)
     {
@@ -349,8 +345,7 @@ void Snake::clearButtonCallbacks()
         buttons->setButtonHeldCallback(i, 0, nullptr);
     }
 }
-
-void Snake::snakeMenu()
+void Snake::Snake::snakeMenu()
 {
     if (snakeMenuInt == 0)
     {
@@ -360,7 +355,7 @@ void Snake::snakeMenu()
     }
     snakeLength = 30;
 }
-void Snake::snakeMenuControl()
+void Snake::Snake::snakeMenuControl()
 {
     if (snakeX[0] < 121 && snakeY[0] <= 1)
     {
@@ -383,8 +378,7 @@ void Snake::snakeMenuControl()
         dirY = -1;
     }
 }
-
-void Snake::newGameSetup()
+void Snake::Snake::newGameSetup()
 {
     setButtonCallbacksGame();
     for (int i = 400; i > 0; i--)
@@ -404,8 +398,7 @@ void Snake::newGameSetup()
     hScore = 0;
     gamestatus = "oldgame";
 }
-
-void Snake::drawFood()
+void Snake::Snake::drawFood()
 {
     while (!foodCoolFlag)
     {
@@ -432,8 +425,7 @@ void Snake::drawFood()
     foodCoolFlag = 0;
     eaten = false;
 }
-
-void Snake::drawSnake()
+void Snake::Snake::drawSnake()
 {
     for (int i = (snakeLength)-1; i >= 0; i--)
     {
@@ -458,8 +450,7 @@ void Snake::drawSnake()
     }
     drawHead();
 }
-
-void Snake::setButtonCallbacksGame()
+void Snake::Snake::setButtonCallbacksGame()
 {
     clearButtonCallbacks();
     buttons->setBtnPressCallback(BTN_UP, []() {
@@ -496,7 +487,7 @@ void Snake::setButtonCallbacksGame()
         tone(BUZZ_PIN, 100, 100);
     });
 }
-void Snake::foodCheck()
+void Snake::Snake::foodCheck()
 {
     if (baseSprite->readPixel(snakeX[0], snakeY[0]) == TFT_YELLOW)
         eaten = true;
@@ -517,8 +508,7 @@ void Snake::foodCheck()
         bigger = true;
     }
 }
-
-void Snake::crash()
+void Snake::Snake::crash()
 {
     if (borderFlag)
     {
@@ -551,7 +541,7 @@ void Snake::crash()
             gamestatus = "dead";
     }
 }
-void Snake::dead()
+void Snake::Snake::dead()
 {
     delay(1000);
     tone(BUZZ_PIN, 50, 300);
@@ -572,7 +562,7 @@ void Snake::dead()
     display->commit();
     delay(1500);
 }
-void Snake::oldgame()
+void Snake::Snake::oldgame()
 {
     if (speed > 1 || skip == 0)
     {
@@ -601,7 +591,7 @@ void Snake::oldgame()
     else
         skip = 0;
 }
-void Snake::pausedSetup()
+void Snake::Snake::pausedSetup()
 {
     clearButtonCallbacks();
     buttons->setBtnPressCallback(BTN_B, []() {
@@ -615,7 +605,7 @@ void Snake::pausedSetup()
         tone(BUZZ_PIN, 200, 100);
     });
 }
-void Snake::paused()
+void Snake::Snake::paused()
 {
     baseSprite->clear(TFT_BLACK);
     drawSnake();
@@ -639,5 +629,4 @@ void Snake::paused()
     baseSprite->setCursor(35, 80);
     baseSprite->printCenter("Press B to exit");
 }
-
-void Snake::oldGame() {}
+void Snake::Snake::oldGame() {}
