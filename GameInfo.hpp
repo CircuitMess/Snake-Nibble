@@ -18,5 +18,5 @@ struct GameInfo
 {
     "Snake",
         "Snake around and collect food to become bigger!",
-        spacerocks_icon,
+        snake_icon,
         [](Display &display) -> Context * { return new Snake(display); }
