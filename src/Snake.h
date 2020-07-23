@@ -10,7 +10,7 @@
 #include <gpio.h>
 #include <avr/pgmspace.h>
 #include <Support/Context.h>
-#include "../ByteBoy.hpp"
+#include "../Nibble.hpp"
 #include <UI/Image.h>
 
 constexpr int BACKGROUND_COLOR = 0x0000; // Background color in hex. 0x0000 is black.
@@ -20,7 +20,7 @@ constexpr int EYE_COLOR = 0x0000;
 constexpr int maxSnakeLength = 500;
 namespace Snake
 {
-    class Snake : public Game, public UpdateListener
+    class Snake : public Context, public UpdateListener
     {
     public:
         Snake(Display &display);
@@ -32,10 +32,10 @@ namespace Snake
     private:
         Sprite *baseSprite;
         Input *buttons;
-        StaticJsonDocument<8000> jb;
+        // StaticJsonDocument<8000> jb;
         String gamestatus;
         bool screenChange;
-        char *highscoresPath;
+        // char *highscoresPath;
         static Snake *instance;
         String prevGamestatus = gamestatus;
         bool savePresent = 0;

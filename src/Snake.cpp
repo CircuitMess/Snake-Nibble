@@ -1,25 +1,24 @@
 #include "Snake.h"
 #include "snake_icon.h"
 Snake::Snake *Snake::Snake::instance = nullptr;
-GameInfo Game::info = {"Snake", "Classic snake game", snake_icon};
-Snake::Snake::Snake(Display &display) : Game(display), baseSprite(display.getBaseSprite()),
+Snake::Snake::Snake(Display &display) : Context(display), baseSprite(display.getBaseSprite()),
                                         buttons(Input::getInstance()), display(&display)
 {
     Serial.println("construcctor");
     delay(5);
     Serial.println(baseSprite->created() ? "created" : "not created");
     instance = this;
-    highscoresPath = (char *)calloc(30, 1);
-    strncpy(highscoresPath, "/", 30);
-    if (info.title)
-    {
-        strncat(highscoresPath, info.title, 30);
-    }
-    else
-    {
-        strncat(highscoresPath, "game", 30);
-    }
-    strncat(highscoresPath, ".sav", 30);
+    // highscoresPath = (char *)calloc(30, 1);
+    // strncpy(highscoresPath, "/", 30);
+    // if (info.title)
+    // {
+    //     strncat(highscoresPath, info.title, 30);
+    // }
+    // else
+    // {
+    //     strncat(highscoresPath, "game", 30);
+    // }
+    // strncat(highscoresPath, ".sav", 30);
 }
 void Snake::Snake::start()
 {
@@ -27,31 +26,31 @@ void Snake::Snake::start()
     //baseSprite->clear(TFT_BLUE);
     prevGamestatus = "";
     gamestatus = "title";
-    Serial.println(highscoresPath);
-    File file = SPIFFS.open(highscoresPath, "r");
-    deserializeJson(jb, file);
-    JsonArray hiscores = jb.to<JsonArray>();
-    file.close();
-    if (!hiscores.isNull())
-        savePresent = 1;
-    else
-    {
-        Serial.println("No save present");
-        JsonArray hiscores = jb.as<JsonArray>();
-        File file = SPIFFS.open(highscoresPath, "w");
-        serializeJson(hiscores, file);
-        file.close();
-    }
-    serializeJsonPretty(hiscores, Serial);
-    Serial.println("saves ok");
+    // Serial.println(highscoresPath);
+    // File file = SPIFFS.open(highscoresPath, "r");
+    // deserializeJson(jb, file);
+    // JsonArray hiscores = jb.to<JsonArray>();
+    // file.close();
+    // if (!hiscores.isNull())
+    //     savePresent = 1;
+    // else
+    // {
+    //     Serial.println("No save present");
+    //     JsonArray hiscores = jb.as<JsonArray>();
+    //     File file = SPIFFS.open(highscoresPath, "w");
+    //     serializeJson(hiscores, file);
+    //     file.close();
+    // }
+    // serializeJsonPretty(hiscores, Serial);
+    // Serial.println("saves ok");
     draw();
     UpdateManager::addListener(this);
 }
 void Snake::Snake::stop()
 {
     //clearButtonCallbacks();
-    jb.clear();
-    delete[] highscoresPath;
+    // jb.clear();
+    // delete[] highscoresPath;
     UpdateManager::removeListener(this);
 }
 void Snake::Snake::draw()
