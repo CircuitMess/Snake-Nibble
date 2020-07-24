@@ -8,7 +8,7 @@
 #include <spiffs_api.h>
 #include <gpio.h>
 #include <avr/pgmspace.h>
-#include "ByteBoy.hpp"
+#include "Nibble.hpp"
 
 Display display(128, 128, BL_PIN, 0);
 I2cExpander i2c;
