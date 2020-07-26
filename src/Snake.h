@@ -63,6 +63,7 @@ namespace Snake
         bool skip;
         uint8_t snakeColorVal;
         bool bigger;
+		uint deadTime = 0;
 
         //void clearButtonCallbacks();
         void titleSetup();
@@ -81,7 +82,6 @@ namespace Snake
         void oldgame();
         void paused();
         void pausedSetup();
-        void oldGame();
         void snakeMenuControl();
     };
 }; // namespace Snake
