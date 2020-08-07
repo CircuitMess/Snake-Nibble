@@ -9,6 +9,7 @@
 #include <gpio.h>
 #include <avr/pgmspace.h>
 #include "Nibble.hpp"
+#include <Audio/Piezo.h>
 
 Display display(128, 128, BL_PIN, 0);
 I2cExpander i2c;
@@ -27,6 +28,7 @@ void setup()
     Serial.println("display ok");
     Serial.println("buttons begin");
     SPIFFS.begin();
+    Piezo.begin(BUZZ_PIN);
 
     Serial.println("spiffs begin");
     UpdateManager::addListener(&buttons);
