@@ -1,6 +1,8 @@
 #include "Snake.h"
 #include <Audio/Piezo.h>
 #include "snake_icon.h"
+#include "Highscore.h"
+
 Snake::Snake *Snake::Snake::instance = nullptr;
 Snake::Snake::Snake(Display &display) : Context(display), baseSprite(display.getBaseSprite()),
 										buttons(Input::getInstance()), display(&display)
@@ -9,49 +11,17 @@ Snake::Snake::Snake(Display &display) : Context(display), baseSprite(display.get
 	instance = this;
 	gamestatus = "title";
 	deadTime = 0;
-	// highscoresPath = (char *)calloc(30, 1);
-	// strncpy(highscoresPath, "/", 30);
-	// if (info.title)
-	// {
-	//     strncat(highscoresPath, info.title, 30);
-	// }
-	// else
-	// {
-	//     strncat(highscoresPath, "game", 30);
-	// }
-	// strncat(highscoresPath, ".sav", 30);
 	
 }
 void Snake::Snake::start()
 {
-	//randomSeed(millis() * micros());
-	//baseSprite->clear(TFT_BLUE);
+	Highscore.begin();
 	prevGamestatus = "";
-	// Serial.println(highscoresPath);
-	// File file = SPIFFS.open(highscoresPath, "r");
-	// deserializeJson(jb, file);
-	// JsonArray hiscores = jb.to<JsonArray>();
-	// file.close();
-	// if (!hiscores.isNull())
-	//     savePresent = 1;
-	// else
-	// {
-	//     Serial.println("No save present");
-	//     JsonArray hiscores = jb.as<JsonArray>();
-	//     File file = SPIFFS.open(highscoresPath, "w");
-	//     serializeJson(hiscores, file);
-	//     file.close();
-	// }
-	// serializeJsonPretty(hiscores, Serial);
-	// Serial.println("saves ok");
 	draw();
 	UpdateManager::addListener(this);
 }
 void Snake::Snake::stop()
 {
-	//clearButtonCallbacks();
-	// jb.clear();
-	// delete[] highscoresPath;
 	UpdateManager::removeListener(this);
 }
 void Snake::Snake::draw()
@@ -72,6 +42,18 @@ void Snake::Snake::draw()
 	if (gamestatus == "paused")
 	{
 		paused();
+	}
+	if(gamestatus == "eraseData")
+	{
+		eraseDataDraw();
+	}
+	if(gamestatus == "dataDisplay")
+	{
+		dataDisplay();
+	}
+	if(gamestatus == "enterInitials")
+	{
+		enterInitialsDraw();
 	}
 }
 void Snake::Snake::titleScreen()
@@ -183,7 +165,7 @@ void Snake::Snake::titleSetup()
 			instance->gamestatus = "newgame";
 			break;
 		case 2:
-			//instance->gamestatus = "score";
+			instance->gamestatus = "dataDisplay";
 			break;
 		case 3:
 			instance->pop();
@@ -285,26 +267,25 @@ void Snake::Snake::update(uint _time)
 		deadTime+=_time;
 		dead();
 	}
-	if (gamestatus == "eraseData")
+	if(gamestatus == "eraseData")
 	{
-		if (screenChange)
-		{
-			//eraseDataSetup();
+		if(screenChange){
+			eraseDataSetup();
+		}
+		eraseDataUpdate();
+	}
+	if(gamestatus == "dataDisplay")
+	{
+		if(screenChange){
+			dataDisplaySetup();
 		}
 	}
-	if (gamestatus == "dataDisplay")
+	if(gamestatus == "enterInitials")
 	{
-		if (screenChange)
-		{
-			//dataDisplaySetup();
+		if(screenChange){
+			enterInitialsSetup();
 		}
-	}
-	if (gamestatus == "enterInitials")
-	{
-		if (screenChange)
-		{
-			//enterInitialsSetup();
-		}
+		enterInitialsUpdate();
 	}
 	draw();
 	display->commit();
@@ -568,7 +549,7 @@ void Snake::Snake::dead()
 	}
 	if(deadTime > 2500000)
 	{
-		gamestatus = "title";
+		gamestatus = "enterInitials";
 	}
 }
 void Snake::Snake::oldgame()
@@ -635,4 +616,218 @@ void Snake::Snake::paused()
 	baseSprite->setTextFont(2);
 	baseSprite->setCursor(35, 80);
 	baseSprite->printCenter("Press B to exit");
+}
+
+void Snake::Snake::enterInitialsSetup()
+{
+	tempScore = Highscore.get(0).score;
+	name = "AAA";
+	charCursor = 0;
+	previous = "";
+	elapsedMillis = millis();
+	hiscoreMillis = millis();
+	blinkState = 1;
+	hiscoreBlink = 0;
+	clearButtonCallbacks();
+	buttons->setBtnPressCallback(BTN_UP,[](){
+		instance->blinkState = 1;
+		instance->elapsedMillis = millis();
+		instance->name[instance->charCursor]++;
+		// A-Z 0-9 :-? !-/ ' '
+		if (instance->name[instance->charCursor] == '0') instance->name[instance->charCursor] = ' ';
+		if (instance->name[instance->charCursor] == '!') instance->name[instance->charCursor] = 'A';
+		if (instance->name[instance->charCursor] == '[') instance->name[instance->charCursor] = '0';
+		if (instance->name[instance->charCursor] == '@') instance->name[instance->charCursor] = '!';
+	});
+	buttons->setButtonHeldRepeatCallback(BTN_UP, 200, [](uint){
+		instance->blinkState = 1;
+		instance->elapsedMillis = millis();
+		instance->name[instance->charCursor]++;
+		// A-Z 0-9 :-? !-/ ' '
+		if (instance->name[instance->charCursor] == '0') instance->name[instance->charCursor] = ' ';
+		if (instance->name[instance->charCursor] == '!') instance->name[instance->charCursor] = 'A';
+		if (instance->name[instance->charCursor] == '[') instance->name[instance->charCursor] = '0';
+		if (instance->name[instance->charCursor] == '@') instance->name[instance->charCursor] = '!';
+	});
+	buttons->setButtonHeldRepeatCallback(BTN_DOWN, 200, [](uint){
+		instance->blinkState = 1;
+		instance->elapsedMillis = millis();
+		instance->name[instance->charCursor]--;
+		if (instance->name[instance->charCursor] == ' ') instance->name[instance->charCursor] = '?';
+		if (instance->name[instance->charCursor] == '/') instance->name[instance->charCursor] = 'Z';
+		if (instance->name[instance->charCursor] == 31)  instance->name[instance->charCursor] = '/';
+		if (instance->name[instance->charCursor] == '@') instance->name[instance->charCursor] = ' ';
+	});
+	buttons->setBtnPressCallback(BTN_DOWN, [](){
+		instance->blinkState = 1;
+		instance->elapsedMillis = millis();
+		instance->name[instance->charCursor]--;
+		if (instance->name[instance->charCursor] == ' ') instance->name[instance->charCursor] = '?';
+		if (instance->name[instance->charCursor] == '/') instance->name[instance->charCursor] = 'Z';
+		if (instance->name[instance->charCursor] == 31)  instance->name[instance->charCursor] = '/';
+		if (instance->name[instance->charCursor] == '@') instance->name[instance->charCursor] = ' ';
+	});
+	buttons->setBtnPressCallback(BTN_LEFT, [](){
+		if(instance->charCursor > 0){
+			instance->charCursor--;
+			instance->blinkState = 1;
+			instance->elapsedMillis = millis();
+		}
+	});
+	buttons->setBtnPressCallback(BTN_RIGHT, [](){
+		if(instance->charCursor < 2){
+			instance->charCursor++;
+			instance->blinkState = 1;
+			instance->elapsedMillis = millis();
+		}
+	});
+	buttons->setBtnPressCallback(BTN_A, [](){
+		instance->charCursor++;
+		instance->blinkState = 1;
+		instance->elapsedMillis = millis();
+	});
+}
+void Snake::Snake::enterInitialsUpdate() {
+  
+    if (millis() - elapsedMillis >= 350) //cursor blinking routine
+	{
+		elapsedMillis = millis();
+		blinkState = !blinkState;
+	}
+    if(millis()-hiscoreMillis >= 1000)
+    {
+      hiscoreMillis = millis();
+      hiscoreBlink = !hiscoreBlink;
+    }
+    previous = name;
+
+    if (previous != name)
+    {
+      blinkState = 1;
+      elapsedMillis = millis();
+    }
+
+	if(charCursor >= 3)
+	{
+		Score newScore;
+		strcpy(newScore.name, name.c_str());
+		newScore.score = hScore;
+		Highscore.add(newScore);
+		gamestatus = "dataDisplay";
+	}
+}
+void Snake::Snake::enterInitialsDraw() {
+	baseSprite->clear(TFT_BLACK);
+    baseSprite->setCursor(16, 8);
+    baseSprite->setTextFont(2);
+    baseSprite->setTextColor(TFT_WHITE);
+    baseSprite->setTextSize(1);
+    baseSprite->printCenter("ENTER NAME");
+    baseSprite->setCursor(20, 80);
+	
+    if(hiscoreBlink && hScore > tempScore)
+      baseSprite->printCenter("NEW HIGH!");
+    else
+      baseSprite->printf("SCORE: %04d", hScore);
+
+    baseSprite->setCursor(40, 40);
+    baseSprite->print(name[0]);
+	baseSprite->setCursor(55, 40);
+    baseSprite->print(name[1]);
+	baseSprite->setCursor(70, 40);
+    baseSprite->print(name[2]);
+    // baseSprite->drawRect(30, 38, 100, 20, TFT_WHITE);
+	if(blinkState){
+		baseSprite->drawFastHLine(38 + 15*charCursor, 56, 12, TFT_WHITE);
+	}
+}
+
+void Snake::Snake::dataDisplaySetup()
+{
+	clearButtonCallbacks();
+	buttons->setBtnPressCallback(BTN_UP, [](){
+		instance->gamestatus = "eraseData";
+	});
+	buttons->setBtnPressCallback(BTN_A, [](){
+		instance->gamestatus = "title";
+	});
+	buttons->setBtnPressCallback(BTN_B, [](){
+		instance->gamestatus = "title";
+	});
+}
+void Snake::Snake::dataDisplay()
+{
+	baseSprite->clear(TFT_BLACK);
+	baseSprite->setCursor(32, -2);
+	baseSprite->setTextSize(1);
+	baseSprite->setTextFont(2);
+	baseSprite->setTextColor(TFT_YELLOW);
+	baseSprite->printCenter("HIGHSCORES");
+	baseSprite->setTextColor(TFT_GREEN);
+	baseSprite->setCursor(3, 110);
+	for (int i = 1; i < 6;i++)
+	{
+		baseSprite->setCursor(6, i * 20);
+		if(i <= Highscore.count())
+		{
+			Serial.printf("%d.   %.3s    %04d\n", i, Highscore.get(i - 1).name, Highscore.get(i - 1).score);
+			Serial.println();
+			baseSprite->printf("%d.   %.3s    %04d", i, Highscore.get(i - 1).name, Highscore.get(i - 1).score);
+		}
+		else
+		{
+			baseSprite->printf("%d.    ---   ----", i);
+		}
+	}
+	Serial.println("---------------");
+	baseSprite->setCursor(2, 115);
+	baseSprite->print("Press UP to erase");
+}
+
+void Snake::Snake::eraseDataSetup()
+{
+	elapsedMillis = millis();
+	blinkState = 1;
+	clearButtonCallbacks();
+	buttons->setBtnPressCallback(BTN_B, [](){
+		instance->gamestatus = "dataDisplay";
+
+	});
+	buttons->setBtnPressCallback(BTN_A, [](){
+		Highscore.clear();
+		instance->gamestatus = "title";
+
+	});
+}
+void Snake::Snake::eraseDataDraw()
+{
+	baseSprite->clear(TFT_BLACK);
+	baseSprite->setTextFont(2);
+	baseSprite->setTextColor(TFT_WHITE);
+	baseSprite->setCursor(4, 5);
+	baseSprite->printCenter("ARE YOU SURE?");
+	baseSprite->setCursor(4, 25);
+	baseSprite->printCenter("This cannot");
+	baseSprite->setCursor(4, 41);
+	baseSprite->printCenter("be reverted!");
+
+	if (blinkState){
+		baseSprite->drawRect((baseSprite->width() - 60)/2, 102, 30*2, 9*2, TFT_RED);
+		baseSprite->setTextColor(TFT_RED);
+		baseSprite->setCursor(28*2, 103);
+		baseSprite->printCenter("DELETE");
+	}
+	else {
+		baseSprite->fillRect((baseSprite->width() - 60)/2, 102, 30*2, 9*2, TFT_RED);
+		baseSprite->setTextColor(TFT_WHITE);
+		baseSprite->setCursor(28*2, 103);
+		baseSprite->printCenter("DELETE");
+	}
+}
+void Snake::Snake::eraseDataUpdate()
+{
+	if (millis() - elapsedMillis >= 350) {
+		elapsedMillis = millis();
+		blinkState = !blinkState;
+	}
 }

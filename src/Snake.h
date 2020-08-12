@@ -32,10 +32,8 @@ namespace Snake
     private:
         Sprite *baseSprite;
         Input *buttons;
-        // StaticJsonDocument<8000> jb;
         String gamestatus;
         bool screenChange;
-        // char *highscoresPath;
         static Snake *instance;
         String prevGamestatus = gamestatus;
         bool savePresent = 0;
@@ -65,7 +63,17 @@ namespace Snake
         bool bigger;
 		uint deadTime = 0;
 
-        //void clearButtonCallbacks();
+		uint tempScore = 0;
+		String name = "";
+		String previous = "";
+		uint8_t charCursor = 0;
+		unsigned long elapsedMillis = millis();
+		uint32_t hiscoreMillis = millis();
+		bool hiscoreBlink = 0;
+		uint32_t blinkMillis = millis();
+		bool blinkState = 0;
+
+
         void titleSetup();
         void titleScreen();
         void clearButtonCallbacks();
@@ -83,6 +91,14 @@ namespace Snake
         void paused();
         void pausedSetup();
         void snakeMenuControl();
+		void enterInitialsSetup();
+		void enterInitialsDraw();
+		void enterInitialsUpdate();
+		void eraseDataSetup();
+		void eraseDataDraw();
+		void eraseDataUpdate();
+		void dataDisplaySetup();
+		void dataDisplay();
     };
 }; // namespace Snake
 
