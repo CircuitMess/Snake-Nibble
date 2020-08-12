@@ -319,7 +319,7 @@ void Snake::Snake::control()
 }
 void Snake::Snake::clearButtonCallbacks()
 {
-	for (uint8_t i = 0; i < 7; i++)
+	for (uint8_t i = 0; i < 6; i++)
 	{
 		buttons->setBtnReleaseCallback(i, nullptr);
 		buttons->setBtnPressCallback(i, nullptr);
