@@ -688,24 +688,24 @@ void Snake::Snake::enterInitialsSetup()
 	});
 }
 void Snake::Snake::enterInitialsUpdate() {
-  
-    if (millis() - elapsedMillis >= 350) //cursor blinking routine
+
+	if (millis() - elapsedMillis >= 350) //cursor blinking routine
 	{
 		elapsedMillis = millis();
 		blinkState = !blinkState;
 	}
-    if(millis()-hiscoreMillis >= 1000)
-    {
-      hiscoreMillis = millis();
-      hiscoreBlink = !hiscoreBlink;
-    }
-    previous = name;
+	if(millis()-hiscoreMillis >= 1000)
+	{
+	hiscoreMillis = millis();
+	hiscoreBlink = !hiscoreBlink;
+	}
+	previous = name;
 
-    if (previous != name)
-    {
-      blinkState = 1;
-      elapsedMillis = millis();
-    }
+	if (previous != name)
+	{
+	blinkState = 1;
+	elapsedMillis = millis();
+	}
 
 	if(charCursor >= 3)
 	{
@@ -718,25 +718,25 @@ void Snake::Snake::enterInitialsUpdate() {
 }
 void Snake::Snake::enterInitialsDraw() {
 	baseSprite->clear(TFT_BLACK);
-    baseSprite->setCursor(16, 8);
-    baseSprite->setTextFont(2);
-    baseSprite->setTextColor(TFT_WHITE);
-    baseSprite->setTextSize(1);
-    baseSprite->printCenter("ENTER NAME");
-    baseSprite->setCursor(20, 80);
+	baseSprite->setCursor(16, 8);
+	baseSprite->setTextFont(2);
+	baseSprite->setTextColor(TFT_WHITE);
+	baseSprite->setTextSize(1);
+	baseSprite->printCenter("ENTER NAME");
+	baseSprite->setCursor(20, 80);
 	
-    if(hiscoreBlink && hScore > tempScore)
-      baseSprite->printCenter("NEW HIGH!");
-    else
-      baseSprite->printf("SCORE: %04d", hScore);
+	if(hiscoreBlink && hScore > tempScore)
+	baseSprite->printCenter("NEW HIGH!");
+	else
+	baseSprite->printf("SCORE: %04d", hScore);
 
-    baseSprite->setCursor(40, 40);
-    baseSprite->print(name[0]);
+	baseSprite->setCursor(40, 40);
+	baseSprite->print(name[0]);
 	baseSprite->setCursor(55, 40);
-    baseSprite->print(name[1]);
+	baseSprite->print(name[1]);
 	baseSprite->setCursor(70, 40);
-    baseSprite->print(name[2]);
-    // baseSprite->drawRect(30, 38, 100, 20, TFT_WHITE);
+	baseSprite->print(name[2]);
+	// baseSprite->drawRect(30, 38, 100, 20, TFT_WHITE);
 	if(blinkState){
 		baseSprite->drawFastHLine(38 + 15*charCursor, 56, 12, TFT_WHITE);
 	}
