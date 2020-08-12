@@ -25,7 +25,6 @@ void Snake::HighscoreImpl::add(const Score& score){
 	uint8_t i;
 	for(i = 0; i < data.count; i++){
 		if(score.score <= data.scores[i].score) continue; // if score is lower or equal, continue
-		if(i == data.count-1) break; // if we're on the last place, just overwrite it
 
 		// otherwise, move others down
 		uint8_t first = i;
