@@ -15,6 +15,7 @@ Snake::Snake::Snake(Display &display) : Context(display), baseSprite(display.get
 }
 void Snake::Snake::start()
 {
+	runningContext = this;
 	Highscore.begin();
 	prevGamestatus = "";
 	draw();
