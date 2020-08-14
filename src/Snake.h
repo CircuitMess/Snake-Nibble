@@ -54,7 +54,6 @@ namespace Snake
         uint8_t foodY;
         bool foodCoolFlag;
         uint16_t snakeLength;
-        bool snakeMenuInt;
         uint8_t tileSize = 5;
         bool snakeColor;
         bool eaten;
@@ -94,6 +93,7 @@ namespace Snake
         void paused();
         void pausedSetup();
         void snakeMenuControl();
+		
 		void enterInitialsSetup();
 		void enterInitialsDraw();
 		void enterInitialsUpdate();

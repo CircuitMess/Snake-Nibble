@@ -11,6 +11,8 @@ Snake::Snake::Snake(Display &display) : Context(display), baseSprite(display.get
 	instance = this;
 	gamestatus = "title";
 	deadTime = 0;
+	memset(snakeX, 0, sizeof(snakeX));
+	memset(snakeY, 0, sizeof(snakeY));
 	
 }
 void Snake::Snake::start()
@@ -230,7 +232,6 @@ void Snake::Snake::update(uint _time)
 		titleScreen();
 		control();
 		snakeMenuControl();
-		drawSnake();
 	}
 	if (gamestatus == "newgame")
 	{
@@ -330,12 +331,9 @@ void Snake::Snake::clearButtonCallbacks()
 }
 void Snake::Snake::snakeMenu()
 {
-	if (snakeMenuInt == 0)
-	{
-		snakeX[0] = 0;
-		snakeY[0] = 0;
-		snakeMenuInt = 1;
-	}
+	memset(snakeX, 0, sizeof(snakeX));
+	memset(snakeY, 0, sizeof(snakeY));
+	dirX = 1; dirY = 0;
 	snakeLength = 30;
 }
 void Snake::Snake::snakeMenuControl()
@@ -378,7 +376,7 @@ void Snake::Snake::newGameSetup()
 
 	dirX = 1 * 1;
 	dirY = 0;
-	snakeLength = 12 / 1;
+	snakeLength = 12;
 	hScore = 0;
 	gamestatus = "oldgame";
 }
