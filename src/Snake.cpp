@@ -1,6 +1,5 @@
 #include "Snake.h"
 #include <Audio/Piezo.h>
-#include "snake_icon.h"
 #include "Highscore.h"
 
 Snake::Snake *Snake::Snake::instance = nullptr;

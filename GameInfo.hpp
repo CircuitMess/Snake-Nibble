@@ -12,7 +12,7 @@ struct GameInfo
 
 #include <Arduino.h>
 #include <Display/Display.h>
-#include "src/snake_icon.h"
+#include "src/snake_icon.hpp"
 #include "src/Snake.h"
 const GameInfo SnakeInfo
 {
