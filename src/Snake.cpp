@@ -25,6 +25,7 @@ void Snake::Snake::start()
 }
 void Snake::Snake::stop()
 {
+	clearButtonCallbacks();
 	UpdateManager::removeListener(this);
 }
 void Snake::Snake::draw()
