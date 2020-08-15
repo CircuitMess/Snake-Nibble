@@ -42,6 +42,17 @@ void Snake::Snake::draw()
 	{
 		oldgame();
 	}
+	if(gamestatus == "dead")
+	{
+		if(deadTime <= 500000)
+		{
+			oldgame();
+		}
+		else
+		{
+			drawDead();
+		}
+	}
 	if (gamestatus == "paused")
 	{
 		paused();
@@ -266,6 +277,10 @@ void Snake::Snake::update(uint _time)
 
 	if (gamestatus == "dead")
 	{
+		if(screenChange)
+		{
+			clearButtonCallbacks();
+		}
 		deadTime+=_time;
 		dead();
 	}
@@ -527,25 +542,25 @@ void Snake::Snake::crash()
 		}
 	}
 }
+void Snake::Snake::drawDead()
+{
+	baseSprite->clear(TFT_BLACK);
+	baseSprite->setTextSize(2);
+	baseSprite->setTextFont(1);
+	baseSprite->setCursor(5, 5);
+	baseSprite->setTextColor(TFT_RED);
+	baseSprite->printCenter("GAME OVER");
+	baseSprite->setTextFont(2);
+	baseSprite->setCursor(5, 55);
+	baseSprite->setTextColor(TFT_YELLOW);
+	baseSprite->setTextSize(1);
+	baseSprite->printCenter("Your score:");
+	baseSprite->println();
+	baseSprite->setTextSize(2);
+	baseSprite->printCenter(hScore);
+}
 void Snake::Snake::dead()
 {
-	if(deadTime > 1000000)
-	{
-		baseSprite->clear(TFT_BLACK);
-		baseSprite->setTextSize(2);
-		baseSprite->setTextFont(1);
-		baseSprite->setCursor(5, 5);
-		baseSprite->setTextColor(TFT_RED);
-		baseSprite->printCenter("GAME OVER");
-		baseSprite->setTextFont(2);
-		baseSprite->setCursor(5, 55);
-		baseSprite->setTextColor(TFT_YELLOW);
-		baseSprite->setTextSize(1);
-		baseSprite->printCenter("Your score:");
-		baseSprite->println();
-		baseSprite->setTextSize(2);
-		baseSprite->printCenter(hScore);
-	}
 	if(deadTime > 2500000)
 	{
 		gamestatus = "enterInitials";
