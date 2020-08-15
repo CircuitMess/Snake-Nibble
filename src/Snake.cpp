@@ -810,17 +810,25 @@ void Snake::Snake::eraseDataDraw()
 	baseSprite->setCursor(4, 41);
 	baseSprite->printCenter("be reverted!");
 
+	baseSprite->setCursor(10, 102);
+	baseSprite->print("B:");
+	baseSprite->setCursor(48, 102);
+	baseSprite->print("Cancel");
+
+	baseSprite->setCursor(10, 81);
+	baseSprite->print("A:");
+
 	if (blinkState){
-		baseSprite->drawRect((baseSprite->width() - 60)/2, 102, 30*2, 9*2, TFT_RED);
+		baseSprite->drawRect((baseSprite->width() - 60)/2 + 5, 80, 30*2, 9*2, TFT_RED);
 		baseSprite->setTextColor(TFT_RED);
-		baseSprite->setCursor(28*2, 103);
-		baseSprite->printCenter("DELETE");
+		baseSprite->setCursor(46, 81);
+		baseSprite->print("DELETE");
 	}
 	else {
-		baseSprite->fillRect((baseSprite->width() - 60)/2, 102, 30*2, 9*2, TFT_RED);
+		baseSprite->fillRect((baseSprite->width() - 60)/2 + 5, 80, 30*2, 9*2, TFT_RED);
 		baseSprite->setTextColor(TFT_WHITE);
-		baseSprite->setCursor(28*2, 103);
-		baseSprite->printCenter("DELETE");
+		baseSprite->setCursor(46, 81);
+		baseSprite->print("DELETE");
 	}
 }
 void Snake::Snake::eraseDataUpdate()
