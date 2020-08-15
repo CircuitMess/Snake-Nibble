@@ -89,6 +89,7 @@ namespace Snake
         void crash();
         void foodCheck();
         void dead();
+        void drawDead();
         void oldgame();
         void paused();
         void pausedSetup();
