@@ -27,6 +27,9 @@ void Snake::Snake::stop()
 	clearButtonCallbacks();
 	UpdateManager::removeListener(this);
 }
+void Snake::Snake::pack(){
+	exitingGame = true;
+}
 void Snake::Snake::draw()
 {
 	if (gamestatus == "title")

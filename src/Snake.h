@@ -20,6 +20,7 @@ constexpr int EYE_COLOR = 0x0000;
 constexpr int maxSnakeLength = 500;
 
 extern Context* runningContext;
+extern bool exitingGame;
 
 namespace Snake
 {
@@ -31,6 +32,7 @@ namespace Snake
         void start() override;
         void update(uint) override;
         void stop() override;
+        void pack() override;
 
     private:
         Sprite *baseSprite;
