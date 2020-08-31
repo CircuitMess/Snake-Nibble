@@ -4,7 +4,7 @@
 #include <CircuitOS.h>
 #include <Input/I2cExpander.h>
 #include <Input/InputI2C.h>
-#include <Update/UpdateManager.h>
+#include <Loop/LoopManager.h>
 #include <ArduinoJson.h>
 #include <spiffs_api.h>
 #include <gpio.h>
@@ -24,13 +24,13 @@ extern bool exitingGame;
 
 namespace Snake
 {
-    class Snake : public Context, public UpdateListener
+    class Snake : public Context, public LoopListener
     {
     public:
         Snake(Display &display);
         void draw() override;
         void start() override;
-        void update(uint) override;
+        void loop(uint) override;
         void stop() override;
         void pack() override;
 

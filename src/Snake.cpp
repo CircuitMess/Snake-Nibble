@@ -20,12 +20,12 @@ void Snake::Snake::start()
 	Highscore.begin();
 	prevGamestatus = "";
 	draw();
-	UpdateManager::addListener(this);
+	LoopManager::addListener(this);
 }
 void Snake::Snake::stop()
 {
 	clearButtonCallbacks();
-	UpdateManager::removeListener(this);
+	LoopManager::removeListener(this);
 }
 void Snake::Snake::pack(){
 	exitingGame = true;
@@ -226,7 +226,7 @@ void Snake::Snake::drawHead()
 		baseSprite->drawPixel(snakeX[0] + 3, snakeY[0] + 4, TFT_BLACK);
 	}
 }
-void Snake::Snake::update(uint _time)
+void Snake::Snake::loop(uint _time)
 {
 	if (gamestatus != prevGamestatus)
 	{

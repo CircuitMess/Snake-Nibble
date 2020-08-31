@@ -3,7 +3,7 @@
 #include <CircuitOS.h>
 #include <Input/I2cExpander.h>
 #include <Input/InputI2C.h>
-#include <Update/UpdateManager.h>
+#include <Loop/LoopManager.h>
 #include <ArduinoJson.h>
 #include <spiffs_api.h>
 #include <gpio.h>
@@ -31,7 +31,7 @@ void setup()
     Piezo.begin(BUZZ_PIN);
 
     Serial.println("spiffs begin");
-    UpdateManager::addListener(&buttons);
+    LoopManager::addListener(&buttons);
 
     game.unpack();
     game.start();
@@ -39,6 +39,6 @@ void setup()
 
 void loop()
 {
-    UpdateManager::update();
+	LoopManager::loop();
     yield();
 }
